@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASM1.Data;
 using ASM1.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASM1.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,10 +23,25 @@ namespace ASM1.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        
+        public async Task<IActionResult> Index(string searchString)
         {
             var applicationDbContext = _context.Product.Include(p => p.Category);
+            
+            var products = from p in _context.Product
+                           select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.Name!.Contains(searchString));
+            }
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        [HttpPost]
+        public string Index(string searchString, bool notUsed)
+        {
+            return "From [HttpPost]Index: filter on " + searchString;
         }
 
         // GET: Products/Details/5

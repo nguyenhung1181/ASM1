@@ -1,14 +1,26 @@
 ﻿@model IEnumerable<ASM1.Models.Product>
 
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Product</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-controller="Products" asp-action="Index" method="get">
+    <p>
+        @*<select asp-for="ProductGenre" asp-items="Model.Genres">
+            <option value="">All</option>
+        </select>*@
+
+        Title: <input type="text" name="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>
